@@ -9,6 +9,7 @@ import (
 
 	log "github.com/golang/glog"
 	"github.com/rnzsgh/compute-example-api/api"
+	"github.com/rnzsgh/compute-example-api/listen"
 )
 
 func init() {
@@ -23,12 +24,16 @@ func main() {
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	srv := api.RunHttpServer()
 
+	stopListening := listen.ListenForCompletedJobs()
+
 	go func() {
 		<-sigs
 		running <- false
 	}()
 
 	<-running
+
+	stopListening()
 
 	if err := srv.Shutdown(context.TODO()); err != nil {
 		log.Errorf("Unable to shutdown http server: %v", err)
