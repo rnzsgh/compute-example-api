@@ -33,7 +33,7 @@ func WorkSubmit(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		log.Error(err)
 	} else {
-		log.Info("Submitted message to queue: %s - message id: %s", os.Getenv("SQS_JOB_QUEUE_URL"), messageId)
+		log.Infof("Submitted message to queue: %s - message id: %s", os.Getenv("SQS_JOB_QUEUE_URL"), messageId)
 		response.Message = "Accepted"
 		w.WriteHeader(http.StatusAccepted)
 	}
